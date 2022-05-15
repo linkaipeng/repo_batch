@@ -103,6 +103,10 @@ class OperateBarWidget extends StatelessWidget {
                 EasyLoading.showError('请勾选需要打 tag 的仓库', dismissOnTap: true);
                 return;
               }
+              if (RepoDataCubit.getRepoDataCubit(context).isContainsHttps()) {
+                EasyLoading.showError('打 tag 目前仅支持 ssh 仓库', dismissOnTap: true);
+                return;
+              }
               showDialog(
                 context: context,
                 builder: (BuildContext context) {

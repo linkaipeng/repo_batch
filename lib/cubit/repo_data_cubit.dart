@@ -32,6 +32,8 @@ class RepoDataCubit extends Cubit<RepoDataState> {
 
   bool isSelectedEmpty() => state.selectedRepoUrlList.isEmpty;
 
+  bool isContainsHttps() => state.selectedRepoUrlList.any((url) => url.startsWith('https://'));
+
   void selectRepo(String? repoUrl) {
     if (repoUrl == null) {
       emit(state.clone());
