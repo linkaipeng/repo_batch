@@ -339,6 +339,9 @@ class GitRepository {
     }
     String result = '';
     for (var value in contents.split('\n')) {
+      if (!_verifyInputUrl(value)) {
+        continue;
+      }
       result += (value.trim() + '\n');
     }
     await file.writeAsString(result);
@@ -354,10 +357,14 @@ class GitRepository {
     }
     List<String> lines = await file.readAsLines();
     for (var line in lines) {
-      if (line.trim().isNotEmpty) {
+      if (line.trim().isNotEmpty && _verifyInputUrl(line)) {
         repoUrlList.add(line.trim());
       }
     }
     return repoUrlList;
+  }
+
+  bool _verifyInputUrl(String line) {
+    return line.startsWith('https://') || line.startsWith('git@');
   }
 }

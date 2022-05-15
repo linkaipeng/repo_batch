@@ -61,6 +61,19 @@ class RepoInputWidget extends StatelessWidget {
               ),
             ),
             Container(
+              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 18),
+              child: const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  '仅支持 ssh 和 https 格式的 git 仓库链接，其他非法内容会被过滤掉',
+                  style: TextStyle(
+                    color: Colors.white54,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ),
+            Container(
               margin: const EdgeInsets.only(top: 30),
               child: CommonTextButton(
                 text: '确定',
