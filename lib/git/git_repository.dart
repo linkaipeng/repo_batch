@@ -96,17 +96,18 @@ class GitRepository {
         continue;
       }
       GitDir gitDir = await GitDir.fromExisting(file.absolute.path);
-      String remote = await getRemoteName(gitDir);
-      print('remote = $remote');
+      String remote = await _getRemoteName(gitDir);
+      String remoteUrl = await _getRemoteUrl(gitDir, remote);
+      if (selectedList != null && !selectedList.contains(remoteUrl)) {
+        continue;
+      }
+      print('_fetchGitRepoDetailInfo remote = $remote, url = $remoteUrl');
 
       // 连接仓库和文件夹的关系
       Repo? repo = await _updateRepoDirInfo(gitDir, remote, repoList, file);
       if (repo == null) {
         logCallback?.call(ConsoleLog(LogLevel.ERROR, '${file.path} 无效'));
         continue;
-      }
-      if (selectedList != null && !selectedList.contains(repo.url)) {
-        return;
       }
       // 更新 branch
       await _updateBranchInfo(gitDir, repo, remote);
@@ -198,11 +199,15 @@ class GitRepository {
     }
     GitDir gitDir = await GitDir.fromExisting(repo.dirPath!);
     await _runCommand(gitDir, ['checkout', branchName]);
-    await _updateBranchInfo(gitDir, repo, await getRemoteName(gitDir));
+    await _updateBranchInfo(gitDir, repo, await _getRemoteName(gitDir));
   }
 
-  Future<String> getRemoteName(GitDir gitDir) async {
+  Future<String> _getRemoteName(GitDir gitDir) async {
     return (await _runCommand(gitDir, ['remote'])).outText;
+  }
+
+  Future<String> _getRemoteUrl(GitDir gitDir, String remote) async {
+    return (await _runCommand(gitDir, ['remote', 'get-url', remote])).outText;
   }
 
   Future<void> pushReposTag(List<Repo> repoList, List<String> selectedList, String tagName, String tagCommitInfo) async {
@@ -231,7 +236,7 @@ class GitRepository {
 
     GitDir gitDir = await GitDir.fromExisting(repo.dirPath!);
 
-    String remote = await getRemoteName(gitDir);
+    String remote = await _getRemoteName(gitDir);
     String? currentBranch = repo.currentBranch;
     print('pushTag tagName = $tagName, current tagCommitInfo = $tagCommitInfo');
     print('pushTag remote = $remote, current branch = $currentBranch');
@@ -286,7 +291,7 @@ class GitRepository {
       return;
     }
     GitDir gitDir = await GitDir.fromExisting(repo.dirPath!);
-    String remote = await getRemoteName(gitDir);
+    String remote = await _getRemoteName(gitDir);
     String? currentBranch = repo.currentBranch;
     if (currentBranch == null) {
       return;
