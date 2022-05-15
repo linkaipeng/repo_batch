@@ -74,13 +74,27 @@ class CommitLogDialog extends StatelessWidget {
   Widget _buildHeaderWidget(CommitLogLine line) {
     return Container(
       margin: const EdgeInsets.only(top: 25, bottom: 10, left: 20, right: 20),
-      child: Text(
-        line.repo?.name ?? 'Log',
-        style: const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            line.repo?.name ?? 'Log',
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 3),
+          Text(
+            '当前分支：${line.repo?.currentBranch ?? ''}',
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.white70,
+            ),
+          ),
+        ],
       ),
     );
   }
