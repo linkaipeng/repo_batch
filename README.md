@@ -10,7 +10,7 @@
 
 ### 设置
 
-![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36a39c17fadf417f9ddc99f58eaa1bed~tplv-k3u1fbpfcp-watermark.image?)
+![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4863fea2822c4a2fbfc977154bf8c4a6~tplv-k3u1fbpfcp-watermark.image?)
 
 ### 控制台日志
 
