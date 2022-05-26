@@ -6,27 +6,32 @@
 
 输入对应仓库地址后，确定后到首页，点击同步按钮，即可 clone 所有仓库；
 
-![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7152c20b875244eaa55d31c5a98d81f1~tplv-k3u1fbpfcp-watermark.image?)
+
+![main.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9478c510b0e942da864c0b06efee162b~tplv-k3u1fbpfcp-watermark.image?)
 
 ### 设置
 
-![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4863fea2822c4a2fbfc977154bf8c4a6~tplv-k3u1fbpfcp-watermark.image?)
+
+![settings.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8c70129b4a8d4d36a9514df0ce6cba5b~tplv-k3u1fbpfcp-watermark.image?)
 
 ### 控制台日志
 
-![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/be9a3394e02a404e9dd46f6c740eacf6~tplv-k3u1fbpfcp-watermark.image?)
+
+![console.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/11ea44082b534da3864be35379e832f8~tplv-k3u1fbpfcp-watermark.image?)
 
 ### 单个仓库切自己的分支
 
 每个仓库可以点击切换到自己的分支；
 
-![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6bdffd36435949d8a9b17830da2c3a63~tplv-k3u1fbpfcp-watermark.image?)
+
+![checkout.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/49288fce490b45958731f213d292673c~tplv-k3u1fbpfcp-watermark.image?)
 
 ### 多仓库一键切换分支
 
 如果大部分仓库分支名一样，也是可以一键切换；选择仓库后，可以一键给所有仓库切到对应的分支（仓库如果没有对应分支就不会切）；
 
-![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1eded6d480c243dd94313323589afc2c~tplv-k3u1fbpfcp-watermark.image?)
+
+![branch.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/35c3a88e7b6146889976e4ab98078a2e~tplv-k3u1fbpfcp-watermark.image?)
 
 ### 多仓库一键打 tag
 
@@ -35,11 +40,13 @@
 打 tag 是基于当前分支的，上面切分支的功能可以切不同分支；所以当然就支持为不同仓库的不同分支打相同的 tag 了；
 
 
-![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/843f5f8c0c8f40f5bfb7a75ae840d495~tplv-k3u1fbpfcp-watermark.image?)
+
+![tag.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b7023cf1d29b47fd99b9c462f1684784~tplv-k3u1fbpfcp-watermark.image?)
 
 
 ### 多仓库一键看最近提交日志
 
 这个功能相当于一个辅助功能吧，有时候发布前总想确认一下代码有没有合入发布分支，如果一个个仓库去看就相当麻烦；这样勾选后，一键查看得多香。
 
-![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8690f9c5d2bf43a18dedc5c895e11ff0~tplv-k3u1fbpfcp-watermark.image?)
+
+![log.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1c77fecac58e46e8a8cf65d56f8e79f9~tplv-k3u1fbpfcp-watermark.image?)
