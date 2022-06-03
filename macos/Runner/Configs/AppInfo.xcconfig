@@ -8,7 +8,7 @@
 PRODUCT_NAME = RepoBatch
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.macCommand
+PRODUCT_BUNDLE_IDENTIFIER = com.linkaipeng.repoBatch
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2022 com.example. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2022 com.linkaipeng. All rights reserved.
