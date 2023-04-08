@@ -50,35 +50,34 @@ class GitRepository {
   }
 
   Future<void> checkRepoValidAndUpdate({
-    required List<Repo> repoList,
-    required List<String> selectedList,
+    required List<Repo> selectedRepoList,
     required Function updateCallback,
   }) async {
-    List<Repo> selectedRepoList = repoList.where((repo) => selectedList.contains(repo.url)).toList();
     if (selectedRepoList.isEmpty) {
       logCallback?.call(ConsoleLog(LogLevel.ERROR, 'selectedRepoList is empty.'));
       return;
     }
-    await cloneAllRepo(
-      repoList: selectedRepoList,
+    await cloneSelectedRepo(
+      selectedRepoList: selectedRepoList,
       fetchTagInfo: false,
-      selectedList: selectedList,
       updateCallback: updateCallback,
     );
   }
 
-  Future<void> cloneAllRepo({
-    required List<Repo> repoList,
+  Future<void> cloneSelectedRepo({
+    required List<Repo> selectedRepoList,
     required bool fetchTagInfo,
-    required List<String> selectedList,
     required Function updateCallback,
   }) async {
+    await connectRepoToLocalDir(repoList: selectedRepoList, updateCallback: updateCallback);
+
     Directory repoRootDir = await getRootDirectory();
-    for (var repo in repoList) {
+    for (var repo in selectedRepoList) {
       if (repo.url == null) {
         continue;
       }
-      if (!selectedList.contains(repo.url)) {
+      if ((repo.url?.isNotEmpty ?? false) && (repo.dirPath?.isNotEmpty ?? false)) {
+        logCallback?.call(ConsoleLog(LogLevel.INFO, 'repo ${repo.name} exist.'));
         continue;
       }
       logCallback?.call(ConsoleLog(LogLevel.VERBOSE, 'git clone ${repo.url}'));
@@ -99,10 +98,9 @@ class GitRepository {
       updateCallback();
     }
     await _fetchGitRepoDetailInfo(
-      repoList: repoList,
+      repoList: selectedRepoList,
       fetchTagInfo: fetchTagInfo,
       updateCallback: updateCallback,
-      selectedList: selectedList,
     );
   }
 
@@ -110,29 +108,22 @@ class GitRepository {
     required List<Repo> repoList,
     required bool fetchTagInfo,
     required Function updateCallback,
-    List<String>? selectedList,
   }) async {
-    Directory repoDir = await getRootDirectory();
-    List<FileSystemEntity> fileList = repoDir.listSync(recursive: false);
-    for (var file in fileList) {
-      if (!await GitDir.isGitDir(file.absolute.path)) {
-        logCallback?.call(ConsoleLog(LogLevel.ERROR, '${file.path} 不是 git 仓库'));
+    await connectRepoToLocalDir(repoList: repoList, updateCallback: updateCallback);
+    for (var repo in repoList) {
+      var dirPath = repo.dirPath;
+      if (dirPath == null || dirPath.isEmpty) {
         continue;
       }
-      GitDir gitDir = await GitDir.fromExisting(file.absolute.path);
+      if (!await GitDir.isGitDir(dirPath)) {
+        logCallback?.call(ConsoleLog(LogLevel.ERROR, '$dirPath 不是 git 仓库'));
+        continue;
+      }
+      GitDir gitDir = await GitDir.fromExisting(dirPath);
       String remote = await _getRemoteName(gitDir);
       String remoteUrl = await _getRemoteUrl(gitDir, remote);
-      if (selectedList != null && !selectedList.contains(remoteUrl)) {
-        continue;
-      }
       print('_fetchGitRepoDetailInfo remote = $remote, url = $remoteUrl');
 
-      // 连接仓库和文件夹的关系
-      Repo? repo = await _updateRepoDirInfo(gitDir, remote, repoList, file);
-      if (repo == null) {
-        logCallback?.call(ConsoleLog(LogLevel.ERROR, '${file.path} 无效'));
-        continue;
-      }
       // 更新 branch
       await _updateBranchInfo(gitDir, repo, remote);
       // 更新 tag

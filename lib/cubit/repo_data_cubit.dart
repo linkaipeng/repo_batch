@@ -59,13 +59,16 @@ class RepoDataCubit extends Cubit<RepoDataState> {
 
   bool isAllSelected() => state.selectedRepoUrlList.isNotEmpty && state.repoList.length == state.selectedRepoUrlList.length;
 
-  void cloneRepos() async {
+  List<Repo> _filterSelectedRepoList(List<Repo> allRepoList) {
+    return allRepoList.where((repo) => isRepoSelected(repo.url)).toList();
+  }
+
+  void cloneSelectedRepos() async {
     CommonLoading.showLoading();
     List<Repo> newList = state.deepCloneRepoList();
-    await _gitRepository.cloneAllRepo(
-      repoList: newList,
+    await _gitRepository.cloneSelectedRepo(
+      selectedRepoList: _filterSelectedRepoList(newList),
       fetchTagInfo: true,
-      selectedList: state.selectedRepoUrlList,
       updateCallback: () {
         emit(state.clone()..repoList = newList);
       },
@@ -96,8 +99,7 @@ class RepoDataCubit extends Cubit<RepoDataState> {
     CommonLoading.showLoading();
     List<Repo> newList = state.deepCloneRepoList();
     await _gitRepository.checkRepoValidAndUpdate(
-        repoList: newList,
-        selectedList: state.selectedRepoUrlList,
+        selectedRepoList: _filterSelectedRepoList(newList),
         updateCallback: () {
           emit(state.clone()..repoList = newList);
         }
@@ -116,8 +118,7 @@ class RepoDataCubit extends Cubit<RepoDataState> {
     CommonLoading.showLoading();
     List<Repo> newList = state.deepCloneRepoList();
     await _gitRepository.checkRepoValidAndUpdate(
-        repoList: newList,
-        selectedList: state.selectedRepoUrlList,
+        selectedRepoList: _filterSelectedRepoList(newList),
         updateCallback: () {
           emit(state.clone()..repoList = newList);
         }
@@ -133,8 +134,7 @@ class RepoDataCubit extends Cubit<RepoDataState> {
     CommonLoading.showLoading();
     List<Repo> newList = state.deepCloneRepoList();
     await _gitRepository.checkRepoValidAndUpdate(
-      repoList: newList,
-      selectedList: state.selectedRepoUrlList,
+      selectedRepoList: _filterSelectedRepoList(newList),
       updateCallback: () {
         emit(state.clone()..repoList = newList);
       }

@@ -49,7 +49,7 @@ class OperateBarWidget extends StatelessWidget {
                 EasyLoading.showError('请勾选仓库', dismissOnTap: true);
                 return;
               }
-              RepoDataCubit.getRepoDataCubit(context).cloneRepos();
+              RepoDataCubit.getRepoDataCubit(context).cloneSelectedRepos();
             },
           ),
           const SizedBox(width: 15),
