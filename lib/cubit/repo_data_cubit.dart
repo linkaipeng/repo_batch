@@ -68,6 +68,22 @@ class RepoDataCubit extends Cubit<RepoDataState> {
     List<Repo> newList = state.deepCloneRepoList();
     await _gitRepository.cloneSelectedRepo(
       selectedRepoList: _filterSelectedRepoList(newList),
+      fetchBranchInfo: true,
+      fetchTagInfo: false,
+      updateCallback: () {
+        emit(state.clone()..repoList = newList);
+      },
+    );
+    emit(state.clone()..repoList = newList);
+    CommonLoading.hideLoading();
+  }
+
+  void updateSelectedRepoTags() async {
+    CommonLoading.showLoading();
+    List<Repo> newList = state.deepCloneRepoList();
+    await _gitRepository.cloneSelectedRepo(
+      selectedRepoList: _filterSelectedRepoList(newList),
+      fetchBranchInfo: false,
       fetchTagInfo: true,
       updateCallback: () {
         emit(state.clone()..repoList = newList);

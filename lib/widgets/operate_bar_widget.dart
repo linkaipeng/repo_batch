@@ -55,6 +55,19 @@ class OperateBarWidget extends StatelessWidget {
           const SizedBox(width: 15),
           CommonImageButton(
             width: 20,
+            imgPath: 'assets/images/update_tag.png',
+            toolTipMsg: '刷新 Tag',
+            onTap: () {
+              if (RepoDataCubit.getRepoDataCubit(context).isSelectedEmpty()) {
+                EasyLoading.showError('请勾选仓库', dismissOnTap: true);
+                return;
+              }
+              RepoDataCubit.getRepoDataCubit(context).updateSelectedRepoTags();
+            },
+          ),
+          const SizedBox(width: 15),
+          CommonImageButton(
+            width: 20,
             imgPath: 'assets/images/checkout_branch.png',
             toolTipMsg: '切分支',
             onTap: () async {

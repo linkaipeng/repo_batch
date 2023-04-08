@@ -59,6 +59,7 @@ class GitRepository {
     }
     await cloneSelectedRepo(
       selectedRepoList: selectedRepoList,
+      fetchBranchInfo: true,
       fetchTagInfo: false,
       updateCallback: updateCallback,
     );
@@ -66,6 +67,7 @@ class GitRepository {
 
   Future<void> cloneSelectedRepo({
     required List<Repo> selectedRepoList,
+    required bool fetchBranchInfo,
     required bool fetchTagInfo,
     required Function updateCallback,
   }) async {
@@ -99,6 +101,7 @@ class GitRepository {
     }
     await _fetchGitRepoDetailInfo(
       repoList: selectedRepoList,
+      fetchBranchInfo: fetchBranchInfo,
       fetchTagInfo: fetchTagInfo,
       updateCallback: updateCallback,
     );
@@ -106,6 +109,7 @@ class GitRepository {
 
   Future<void> _fetchGitRepoDetailInfo({
     required List<Repo> repoList,
+    required bool fetchBranchInfo,
     required bool fetchTagInfo,
     required Function updateCallback,
   }) async {
@@ -125,7 +129,9 @@ class GitRepository {
       print('_fetchGitRepoDetailInfo remote = $remote, url = $remoteUrl');
 
       // 更新 branch
-      await _updateBranchInfo(gitDir, repo, remote);
+      if (fetchBranchInfo) {
+        await _updateBranchInfo(gitDir, repo, remote);
+      }
       // 更新 tag
       if (fetchTagInfo) {
         await _updateTagInfo(gitDir, repo, remote);
@@ -134,20 +140,16 @@ class GitRepository {
     }
   }
 
-  Future<Repo?> _updateRepoDirInfo(GitDir gitDir, String remote, List<Repo> repoList, FileSystemEntity file) async {
-    ProcessResult? finalResult = await _runCommands(gitDir, [
-      ['fetch', remote],
-      ['remote', 'get-url', remote],
-    ]);
-    if (finalResult != null && finalResult.exitCode == 0) {
-      String url = finalResult.outText;
-      print('url = $url');
-      Repo? repo = repoList.firstWhereOrNull((repo) => repo.url == url);
-      repo?.dirPath = gitDir.path;
-      repo?.name = file.basename;
-      return repo;
+  Future<void> _pullRepoCurrentBranch(GitDir gitDir, Repo repo, String remote, String currentBranch) async {
+    var gitCommandList = [
+      ['fetch', remote, '--prune'],
+      ['fetch', remote, currentBranch],
+      ['pull'],
+    ];
+    ProcessResult? finalResult = await _runCommands(gitDir, gitCommandList);
+    if (finalResult?.exitCode == 0) {
+      logCallback?.call(ConsoleLog(LogLevel.INFO, '${repo.name} pull done.'));
     }
-    return null;
   }
 
   Future<void> _updateBranchInfo(GitDir gitDir, Repo repo, String remote) async {
@@ -163,6 +165,7 @@ class GitRepository {
       }
       repo.branchList.add(branchName.split('/').last);
     }
+    _pullRepoCurrentBranch(gitDir, repo, remote, currentBranch);
   }
 
   Future<void> _updateTagInfo(GitDir gitDir, Repo repo, String remote) async {
