@@ -74,6 +74,16 @@ class RepoDataCubit extends Cubit<RepoDataState> {
     CommonLoading.hideLoading();
   }
 
+  void connect() async {
+    List<Repo> newList = state.deepCloneRepoList();
+    await _gitRepository.connectRepoToLocalDir(
+        repoList: newList,
+        updateCallback: () {
+          emit(state.clone()..repoList = newList);
+        }
+    );
+  }
+
   void checkoutBranch(Repo repo, String branchName) async {
     CommonLoading.showLoading();
     List<Repo> newList = state.deepCloneRepoList();

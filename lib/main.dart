@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:lifecycle/lifecycle.dart';
 import 'package:repo_batch/cubit/console_cubit.dart';
 import 'package:repo_batch/cubit/menu_cubit.dart';
 import 'package:repo_batch/widgets/menu_bar_widget.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         builder: EasyLoading.init(),
+        navigatorObservers: [defaultLifecycleObserver],
         home: MyHomePage(),
       ),
     );

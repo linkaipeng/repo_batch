@@ -4,15 +4,17 @@ import 'package:collection/collection.dart';
 import 'package:file/file.dart';
 import 'package:file/local.dart';
 import 'package:git/git.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:process_run/utils/process_result_extension.dart';
 import 'package:repo_batch/model/console_log.dart';
 import 'package:repo_batch/model/recent_commit_log.dart';
 import 'package:repo_batch/model/repo.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:process_run/utils/process_result_extension.dart';
 
 class GitRepository {
 
   static Function(ConsoleLog)? logCallback;
+
+  final LocalFileSystem _localFileSystem = const LocalFileSystem();
 
   Future<String> get _rootPath async => (await getApplicationDocumentsDirectory()).path + '/RepoBatch';
   Future<String> get _repoUrlFilePath async => (await _rootPath) + '/repos.txt';
@@ -23,6 +25,28 @@ class GitRepository {
       await directory.create();
     }
     return directory;
+  }
+
+  Future<void> connectRepoToLocalDir({
+    required List<Repo> repoList,
+    required Function updateCallback,
+  }) async {
+    Directory rootDir = await getRootDirectory();
+    List<FileSystemEntity> fileList = rootDir.listSync(recursive: false);
+    for (var file in fileList) {
+      Directory directory = _localFileSystem.directory(file.absolute);
+      if (directory.childDirectory('.git').existsSync()) {
+        final remoteResult = await Process.run('git', ['remote'], workingDirectory: file.absolute.path, runInShell: true);
+        if (remoteResult.exitCode == 0) {
+          final remoteUrlResult = await Process.run('git', ['remote', 'get-url', remoteResult.outText], workingDirectory: file.absolute.path, runInShell: true);
+          // print('remoteUrl = ${remoteUrlResult.outText}');
+          Repo? repo = repoList.firstWhereOrNull((repo) => repo.url == remoteUrlResult.outText);
+          repo?.dirPath = file.path;
+          repo?.name = file.basename;
+        }
+      }
+    }
+    updateCallback();
   }
 
   Future<void> checkRepoValidAndUpdate({
